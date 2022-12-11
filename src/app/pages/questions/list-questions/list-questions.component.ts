@@ -8,37 +8,37 @@ import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 @Component({
   selector: 'app-list-questions',
   templateUrl: './list-questions.component.html',
-  styleUrls: ['./list-questions.component.scss']
+  styleUrls: ['./list-questions.component.scss'],
 })
 export class ListQuestionsComponent implements OnInit {
-
-  listOfData: IQuestion[] = JSON.parse(localStorage.getItem(ListQuestion) || '[]');
+  listOfData: IQuestion[] = JSON.parse(
+    localStorage.getItem(ListQuestion) || '[]'
+  );
   loading = false;
   isOpen = false;
   dataChanged = new Subject();
-  isCheckedButton = true
+  isCheckedButton = true;
 
   constructor(
     private _questionService: QuestionService,
     private _router: Router
   ) {
-    this.dataChanged.pipe(
-      debounceTime(500),
-      distinctUntilChanged())
+    this.dataChanged
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe((data: any) => {
-        this.listOfData[data?.i].answer = data?.value
-        localStorage.setItem(ListQuestion, JSON.stringify(this.listOfData))
+        this.listOfData[data?.i].answer = data?.value;
+        localStorage.setItem(ListQuestion, JSON.stringify(this.listOfData));
       });
   }
 
   ngOnInit(): void {
-    this.getListQuestions()
+    this.getListQuestions();
   }
 
   getListQuestions() {
-    this._questionService.listQuestions.subscribe(data => {
-      this.listOfData = data
-    })
+    this._questionService.listQuestions.subscribe((data) => {
+      this.listOfData = data;
+    });
   }
 
   openProductForm(): void {
@@ -47,18 +47,18 @@ export class ListQuestionsComponent implements OnInit {
 
   viewReviewAnswer() {
     setTimeout(() => {
-      this._router.navigate(['/form/answers'])
+      this._router.navigate(['/form/answers']);
     }, 500);
   }
 
   handlerChange(e: any, i: number, y?: number): void {
     if (this.listOfData[i].type === QuestionType.checkbox) {
-      const {checked} = e.target;
-      this.listOfData[i].answer[Number(y)].selected = checked
-    localStorage.setItem(ListQuestion, JSON.stringify(this.listOfData))
+      const { checked } = e.target;
+      this.listOfData[i].answer[Number(y)].selected = checked;
+      localStorage.setItem(ListQuestion, JSON.stringify(this.listOfData));
     } else {
-      const { value} = e.target;
-      this.dataChanged.next({i, value})
+      const { value } = e.target;
+      this.dataChanged.next({ i, value });
     }
   }
 }

@@ -12,6 +12,9 @@
             rows="2"
             >{{ item.answer }}</textarea
           >
+          <ng-template>
+            <ng-container *ngIf="!item.answer">Please input your product name!</ng-container>
+          </ng-template>
           <ng-template #selectBox>
             <div *ngFor="let data of item.answer; let y = index">
               <input

@@ -9,10 +9,9 @@ import { debounceTime } from 'rxjs';
 @Component({
   selector: 'app-answer-form',
   templateUrl: './answer-form.component.html',
-  styleUrls: ['./answer-form.component.scss']
+  styleUrls: ['./answer-form.component.scss'],
 })
 export class AnswerFormComponent implements OnInit {
-
   visible = false;
   validateForm: FormGroup;
   loading = false;
@@ -30,11 +29,10 @@ export class AnswerFormComponent implements OnInit {
       answer: ['', []],
     });
 
-    this.dataChanged.pipe(
-      debounceTime(500),
-      distinctUntilChanged())
+    this.dataChanged
+      .pipe(debounceTime(500), distinctUntilChanged())
       .subscribe((data: any) => {
-        this.answers[data?.index].value = data?.value
+        this.answers[data?.index].value = data?.value;
       });
   }
 
@@ -51,32 +49,43 @@ export class AnswerFormComponent implements OnInit {
     this._questionService.isOpen.next(false);
   }
 
-
   submitForm(e: any): void {
     this.loading = true;
     const body = this.validateForm.value;
     if (QuestionType.checkbox === body.type) {
-      body.answer = this.answers
+      body.answer = this.answers;
     }
-    this._questionService.addNewQuestion(body)
+    this._questionService.addNewQuestion(body);
     this.loading = false;
-    this.close()
-    this.answers = []
-    this.validateForm.setValue({type: QuestionType.paragraphy, question: '', answer: '' });
+    this.close();
+    this.answers = [];
+    this.validateForm.setValue({
+      type: QuestionType.paragraphy,
+      question: '',
+      answer: '',
+    });
   }
 
   onEnterAnswer(e: any) {
     e.preventDefault();
     const { value } = e.target;
-    this.answers = [...this.answers, {id: Math.random().toString(), value}];
-    if (this.answers.length > 0) {
-      this.validateForm.controls['answer'].clearValidators()
-      this.validateForm.setValue({ ...this.validateForm.value,answer: '' });
+    if (value) {
+      this.answers = [...this.answers, { id: Math.random().toString(), value }];
+      if (this.answers.length > 0) {
+        this.validateForm.controls['answer'].clearValidators();
+        this.validateForm.setValue({ ...this.validateForm.value, answer: '' });
+      }
     }
+
   }
 
   handlerChange(e: any, i: number) {
-    const { value } = e.target
-    this.dataChanged.next({index: i, value})
+    const { value } = e.target;
+    this.dataChanged.next({ index: i, value });
+  }
+
+  handlerTypeChanged(e: any) {
+    console.log();
+
   }
 }
