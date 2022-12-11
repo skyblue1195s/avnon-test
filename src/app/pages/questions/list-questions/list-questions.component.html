@@ -1,0 +1,43 @@
+<nz-card>
+  <div *ngFor="let item of listOfData; let i = index">
+    <form nz-form nzLayout="vertical">
+      <nz-form-item>
+        <nz-form-label class="strong">{{ item.question }}</nz-form-label>
+        <nz-form-control>
+          <textarea
+            *ngIf="item.type === 'paragraphy'; else selectBox"
+            [name]="item.question"
+            nz-input
+            (change)="handlerChange($event, i)"
+            rows="2"
+            >{{ item.answer }}</textarea
+          >
+          <ng-template #selectBox>
+            <div *ngFor="let data of item.answer; let y = index">
+              <input
+                type="checkbox"
+                [id]="data.id"
+                (change)="handlerChange($event, i, y)"
+                [name]="data.id"
+                [value]="data.value"
+                [checked]="data.selected"
+              />
+              <label [for]="data.id" class="ml-4px">{{ data.value }}</label>
+            </div>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+  <a (click)="openProductForm()">Add New Question</a>
+  <button
+    nz-button
+    nzType="primary"
+    (click)="viewReviewAnswer()"
+    class="content-right"
+  >
+    Review my answers
+  </button>
+</nz-card>
+
+<app-answer-form></app-answer-form>

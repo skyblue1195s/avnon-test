@@ -1,0 +1,48 @@
+<nz-drawer
+  [nzBodyStyle]="{ overflow: 'auto' }"
+  [nzMaskClosable]="false"
+  [nzWidth]="720"
+  [nzVisible]="visible"
+  [nzTitle]="title"
+  (nzOnClose)="close()"
+>
+<form nz-form nzLayout="vertical" [formGroup]="validateForm" *nzDrawerContent (ngSubmit)="submitForm($event)">
+    <nz-form-item>
+      <nz-form-label  nzRequired>Type</nz-form-label>
+      <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a person" formControlName="type">
+        <nz-option nzLabel="Paragraphy" nzValue="paragraphy"></nz-option>
+        <nz-option nzLabel="Checkbox" nzValue="checkbox"></nz-option>
+      </nz-select>
+    </nz-form-item>
+    <nz-form-item>
+      <nz-form-label nzRequired>Question</nz-form-label>
+      <nz-form-control nzHasFeedback [nzErrorTip]="questionError">
+        <input nz-input formControlName="question" placeholder="Please enter your question" />
+        <ng-template #questionError let-control>
+          <ng-container *ngIf="control.hasError('required')">Please input your question!</ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item  *ngIf="this.validateForm.value.type === 'checkbox'">
+      <nz-form-label nzRequired>Answer</nz-form-label>
+     <nz-form-control  *ngIf="answers.length > 0">
+      <div *ngFor="let data of answers; let i = index">
+        <input nz-input class="mb-3" [id]="i" [name]="" [value]="data.value" (input)="handlerChange($event, i)" placeholder="Please enter your answer" />
+      </div>
+     </nz-form-control>
+      <nz-form-control nzErrorTip="Please write something here!" *ngIf="answers.length <= 4">
+        <input nz-input formControlName="answer" (keydown.enter)="onEnterAnswer($event)" placeholder="Please enter your answer" />
+        <ng-template #nameError let-control>
+          <ng-container *ngIf="control.hasError('required')">Please input your answer name!</ng-container>
+        </ng-template>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item>
+      <nz-form-control [nzOffset]="7" [nzSpan]="12">
+        <button nz-button nzType="primary" [nzLoading]="loading" [disabled]="!validateForm.valid">Submit</button>
+      </nz-form-control>
+    </nz-form-item>
+  </form>
+</nz-drawer>

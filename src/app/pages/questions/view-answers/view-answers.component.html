@@ -1,0 +1,20 @@
+<nz-card>
+    <div *ngFor="let item of listOfData">
+      <form nz-form nzLayout="vertical">
+        <nz-form-item>
+          <nz-form-label class="strong">{{ item.question }}</nz-form-label>
+          <nz-form-control>
+            <p *ngIf="item.type === 'paragraphy'; else selectBox">{{ item.answer }}</p>
+            <ng-template #selectBox>
+                <p *ngFor="let data of item.answer">
+                    <span *ngIf="data.selected">{{
+                        data.value
+                      }}</span>
+                </p>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+    </div>
+    <button nz-button nzType="primary" (click)="backToForm()" class="content-right">Back To Form Builder</button>
+  </nz-card>
